@@ -1,0 +1,95 @@
+// Central mock dataset used by services when Firebase is removed
+export const metrics = [
+  { id: 'revenue', title: 'Total Revenue', value: '$45,231', change: 12.5, trend: 'up', color: 'primary' },
+  { id: 'users', title: 'Active Users', value: '12,543', change: 18.3, trend: 'up', color: 'success' },
+  { id: 'conversion', title: 'Conversion Rate', value: '4.8%', change: -2.1, trend: 'down', color: 'warning' },
+  { id: 'session', title: 'Avg. Session', value: '5m 24s', change: 3.2, trend: 'up', color: 'info' },
+]
+
+export const traffic = [
+  { name: 'Mon', value: 120 },
+  { name: 'Tue', value: 300 },
+  { name: 'Wed', value: 200 },
+  { name: 'Thu', value: 500 },
+  { name: 'Fri', value: 330 },
+]
+
+export const donutValue = 65
+
+export const activities = [
+  { id: 'a1', time: '10:42 AM', action: 'New order received', user: 'John Doe' },
+  { id: 'a2', time: '10:30 AM', action: 'Payment processed', user: 'Sarah Smith' },
+  { id: 'a3', time: '09:15 AM', action: 'User registered', user: 'Mike Johnson' },
+  { id: 'a4', time: '08:50 AM', action: 'Product updated', user: 'Admin' },
+  { id: 'a5', time: '08:30 AM', action: 'Order shipped', user: 'Logistics Team' }
+]
+
+export const revenueData = [
+  { name: 'Jan', revenue: 4000 },
+  { name: 'Feb', revenue: 3000 },
+  { name: 'Mar', revenue: 5000 },
+  { name: 'Apr', revenue: 4500 },
+  { name: 'May', revenue: 6000 },
+  { name: 'Jun', revenue: 5500 },
+  { name: 'Jul', revenue: 7000 }
+]
+
+export const categoryData = [
+  { name: 'Electronics', sales: 4000, target: 4500 },
+  { name: 'Clothing', sales: 3000, target: 2800 },
+  { name: 'Food', sales: 2000, target: 2200 },
+  { name: 'Books', sales: 2780, target: 2500 },
+  { name: 'Sports', sales: 1890, target: 2100 }
+]
+
+export const performance = [
+  {
+    title: 'Page Load Time',
+    value: '1.2s',
+    change: -15,
+    trend: 'up',
+    status: 'excellent',
+    color: '#16a34a',
+    data: [
+      { name: '1', value: 1.8 },
+      { name: '2', value: 1.6 },
+      { name: '3', value: 1.4 },
+      { name: '4', value: 1.3 },
+      { name: '5', value: 1.2 }
+    ]
+  },
+  {
+    title: 'API Response',
+    value: '234ms',
+    change: 8,
+    trend: 'down',
+    status: 'good',
+    color: '#4361ee',
+    data: [
+      { name: '1', value: 200 },
+      { name: '2', value: 210 },
+      { name: '3', value: 220 },
+      { name: '4', value: 230 },
+      { name: '5', value: 234 }
+    ]
+  }
+]
+
+export const team = [
+  { name: 'John Doe', role: 'Product Manager', initials: 'JD', color: '#4361ee', online: true },
+  { name: 'Sarah Smith', role: 'Lead Developer', initials: 'SS', color: '#7209b7', online: true },
+  { name: 'Mike Johnson', role: 'UX Designer', initials: 'MJ', color: '#f72585', online: false },
+  { name: 'Emily Davis', role: 'Marketing Manager', initials: 'ED', color: '#4cc9f0', online: true },
+  { name: 'Alex Brown', role: 'DevOps Engineer', initials: 'AB', color: '#4895ef', online: false }
+]
+
+// Minimal users & transactions so UI/service code can work without Firebase
+export const users = [
+  { id: 'u1', name: 'Alice Admin', email: 'alice@example.com', role: 'admin', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { id: 'u2', name: 'Bob User', email: 'bob@example.com', role: 'user', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+]
+
+export const transactions = [
+  { id: 't1', userId: 'u1', amount: 4999, currency: 'USD', status: 'completed', createdAt: new Date().toISOString() },
+  { id: 't2', userId: 'u2', amount: 1999, currency: 'USD', status: 'pending', createdAt: new Date().toISOString() }
+]

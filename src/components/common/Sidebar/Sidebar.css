@@ -1,0 +1,225 @@
+.sidebar {
+  width: 280px;
+  background: var(--white);
+  border-right: 1px solid var(--gray-200);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--gray-200);
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(114, 9, 183, 0.05));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.sidebar-header h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.close-button {
+  background: var(--gray-100);
+  border: none;
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  color: var(--gray-700);
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: var(--gray-200);
+  color: var(--gray-900);
+  transform: rotate(90deg);
+}
+
+.sidebar-nav {
+  padding: var(--spacing-md) 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
+  color: var(--gray-700);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  position: relative;
+  width: 100%;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+}
+
+.sidebar-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: linear-gradient(90deg, rgba(67, 97, 238, 0.08), transparent);
+  color: var(--primary);
+}
+
+.sidebar-link:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar-link:active {
+  background: linear-gradient(90deg, rgba(67, 97, 238, 0.15), transparent);
+}
+
+.sidebar-link--active {
+  background: linear-gradient(90deg, rgba(67, 97, 238, 0.12), transparent);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.sidebar-link--active::before {
+  transform: scaleY(1);
+}
+
+/* Glow for active link */
+.sidebar-link--active {
+  box-shadow: 0 6px 20px rgba(67,97,238,0.08);
+}
+
+.sidebar-link:hover {
+  box-shadow: 0 6px 20px rgba(67,97,238,0.06);
+}
+
+.sidebar-icon {
+  font-size: var(--font-size-xl);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-link:hover .sidebar-icon {
+  transform: scale(1.2);
+}
+
+.sidebar-text {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+/* Desktop - always visible */
+@media (min-width: 769px) {
+  /* On desktop, visibility is controlled by the sidebar--open class so the hamburger can toggle it */
+  .sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .sidebar.sidebar--open {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .close-button {
+    display: none;
+  }
+}
+
+/* Mobile - slide in/out with fade */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    animation: slideInFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .sidebar:not(.sidebar--open) {
+    animation: slideOutFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+@keyframes slideInFade {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutFade {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: var(--radius-xl);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
