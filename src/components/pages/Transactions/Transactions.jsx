@@ -22,6 +22,95 @@ const Toast = ({ message, type, onClose }) => (
   </AnimatePresence>
 )
 
+// ----------- Transaction Details Modal -----------
+const TransactionModal = ({ transaction, onClose }) => (
+  <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+      className="form-modal"
+      style={{ zIndex: 4000 }}
+    >
+      <div
+        className="form-box"
+        style={{
+          minWidth: 340,
+          maxWidth: '95vw',
+          padding: '2.4rem 2.2rem',
+          boxShadow: '0 2px 32px #0002'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+          <h2 style={{ margin: 0, fontWeight: 800, fontSize: '1.35rem' }}>
+            <span style={{
+              background: 'linear-gradient(90deg, #4361ee 60%, #b755f4 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Transaction Details
+            </span>
+          </h2>
+          <button
+            onClick={onClose}
+            style={{
+              border: 'none',
+              background: 'transparent',
+              fontSize: '1.7rem',
+              color: '#888',
+              cursor: 'pointer',
+              marginLeft: 12,
+              marginTop: -7
+            }}
+            aria-label="Close"
+            title="Close"
+          >×</button>
+        </div>
+        <div style={{
+          background: 'var(--bg-secondary, #f8fafc)',
+          padding: '1.1rem 1.15rem',
+          borderRadius: 12,
+          boxShadow: '0 2px 8px #0001',
+          marginBottom: 12,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.7rem 3rem' }}>
+            <div>
+              <div className="label">Transaction ID</div>
+              <div className="value" style={{ color: '#4361ee', fontWeight: 800 }}>{transaction.id}</div>
+            </div>
+            <div>
+              <div className="label">Customer</div>
+              <div className="value">{transaction.customer}</div>
+            </div>
+            <div>
+              <div className="label">Date & Time</div>
+              <div className="value">{transaction.date}</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2.2rem 3rem' }}>
+            <div>
+              <div className="label">Amount</div>
+              <div className="value" style={{ color: '#22c55e', fontWeight: 800 }}>${Number(transaction.amount).toFixed(2)}</div>
+            </div>
+            <div>
+              <div className="label">Type</div>
+              <span className={`type-badge type-badge--${transaction.type}`}>{transaction.type}</span>
+            </div>
+            <div>
+              <div className="label">Status</div>
+              <span className={`status-badge status-badge--${transaction.status}`}>{transaction.status}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  </AnimatePresence>
+)
+
 // Edit Transaction Modal
 const EditTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => (
   <AnimatePresence>
@@ -192,7 +281,6 @@ const Transactions = () => {
       showToast('No transactions to export.', 'error')
       return
     }
-
     const csv =
       [
         ['ID', 'Date', 'Customer', 'Amount', 'Type', 'Status'],
@@ -281,7 +369,6 @@ const Transactions = () => {
       showToast('Enter customer and valid amount.', 'error')
       return
     }
-
     try {
       const res = await fetch(`${API_URL}/${editId}`, {
         method: 'PUT',
@@ -324,9 +411,8 @@ const Transactions = () => {
           placeholder="Search customer, ID, or status..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          style={{ padding: '0.5rem', width: '300px'  }}
+          className="search-input"
         />
-
         <button className="btn btn--primary" onClick={handleExport}>
           <span>📥</span> Export
         </button>
@@ -434,17 +520,16 @@ const Transactions = () => {
                     {transaction.status}
                   </span>
                 </td>
-              <td>
-  <div className="action-btns">
-    <button className="action-btn view-btn" onClick={() => handleViewTransaction(transaction)}>
-      👁️ View
-    </button>
-    <button className="action-btn edit-btn" onClick={() => handleEditTransaction(transaction)}>
-      ✏️ Edit
-    </button>
-  </div>
-</td>
-
+                <td>
+                  <div className="action-btns">
+                    <button className="action-btn view-btn" onClick={() => handleViewTransaction(transaction)}>
+                      👁️ View
+                    </button>
+                    <button className="action-btn edit-btn" onClick={() => handleEditTransaction(transaction)}>
+                      ✏️ Edit
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

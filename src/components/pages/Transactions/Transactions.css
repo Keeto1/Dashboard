@@ -1,13 +1,12 @@
 .transactions-page {
-  max-width: 1300px;
-  min-height: 85vh;
-  margin: 0 auto;
-  padding: 2.5rem 2rem 2rem 2rem;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   animation: fadeIn 0.3s ease;
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 2.5rem 2rem 2rem 2rem;
+  background: var(--bg-primary);
 }
 
 .transactions-header {
@@ -37,30 +36,46 @@
   margin: 0;
 }
 
+/*--- SEARCH INPUT: ALWAYS WHITE/LIGHT BG ON LIGHT ---*/
 .search-input {
   flex: 1;
   min-width: 270px;
   max-width: 410px;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1rem;
   border-radius: 32px;
   border: 1px solid #dedede;
   outline: none;
   box-shadow: 0 2px 8px #0001;
   font-size: 1.09rem;
-  margin-right: 16px;
-  background: var(--search-input-bg, #fff);
-  color: var(--search-input-text, #222);
+  margin-right: 4px;
+  background: #f9faff;            /* << Fix: light/white bg for normal mode */
+  color: #202535;                 /* << Fix: clean dark text */
   transition: border 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
 }
+
 .search-input:focus {
   border: 1.5px solid #66bb6a;
   box-shadow: 0 2px 12px #66bb6a26;
 }
 
+/*--- SOFT DARK THEME SEARCH ---*/
+[data-theme="dark"] .search-input {
+  background: #222336 !important;
+  color: #e6ecfa !important;
+  border: 1px solid #2a2b44 !important;
+}
+
+/* Add dark placeholder fix if needed */
+[data-theme="dark"] .search-input::placeholder {
+  color: #8993b1 !important;
+}
+
+/*--- Responsive, cards, table and btns below ---*/
+
 .transactions-stats {
   width: 100%;
   display: flex;
-  gap: 2.1rem;
+  gap: 2.5rem;
   justify-content: space-between;
   margin: 0 0 2.0rem 0;
   flex-wrap: wrap;
@@ -79,7 +94,9 @@
   align-items: center;
   gap: 1.25rem;
   transition: all 0.3s ease;
+  word-break: break-word;
 }
+
 .stat-box:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 24px rgba(0,0,0,0.11);
@@ -96,20 +113,34 @@
   flex-shrink: 0;
 }
 
+.stat-box__info {
+  min-width: 0;
+}
 .stat-box__info h3 {
   font-size: 1.17rem;
-  font-weight: 600;
-  color: #666;
+  font-weight: 700;
+  color: #111 !important;
   margin: 0 0 .22rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  line-break: auto;
+  word-break: break-word;
 }
-
 .stat-box__info p {
   font-size: 1.35rem;
-  font-weight: 800;
-  color: #222;
+  font-weight: 900;
+  color: #111 !important;
   margin: 0;
+  line-break: auto;
+  word-break: break-word;
+}
+
+[data-theme="dark"] .stat-box,
+[data-theme="dark"] .stat-box__info,
+[data-theme="dark"] .stat-box__info h3,
+[data-theme="dark"] .stat-box__info p {
+  background: #181B2E;
+  color: #f3f5fa !important;
 }
 
 .stat-box--primary .stat-box__icon { background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(67, 97, 238, 0.2)); }
@@ -130,18 +161,26 @@
   width: 100%;
 }
 
+[data-theme="dark"] .transactions-table-container {
+  background: #202339 !important;
+  border: 1px solid #2a2b44 !important;
+  box-shadow: 0 1px 18px #1117;
+}
+
 .transactions-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 800px;
 }
+
 .transactions-table thead {
   background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(114, 9, 183, 0.05));
   border-bottom: 2px solid #ececec;
 }
+
 .transactions-table th,
 .transactions-table td {
-  padding: 0.75rem 1.2rem;
+  padding: 0.90rem 1.5rem;
   font-size: 1rem;
   text-align: center;
   border-bottom: 1px solid #f3f4f6;
@@ -153,11 +192,43 @@
   color: #444;
   background: #f7f8fd;
 }
-.transactions-table tbody tr:hover { background: #f7f8fd; }
-.transactions-table th:last-child,
-.transactions-table td:last-child {
-  min-width: 130px;
+
+[data-theme="dark"] .transactions-table th {
+  background: #232944 !important;
+  color: #c2c8e0 !important;
 }
+
+/* --- HOVER FIX START --- */
+.transactions-table tbody tr:hover {
+  background: #edeffa;
+}
+.transactions-table tbody tr:hover .transaction-id {
+  color: #3730a3;
+  background: none;
+}
+.transactions-table tbody tr:hover .transaction-amount {
+  color: #22c55e;
+  background: none;
+}
+[data-theme="dark"] .transactions-table tbody tr {
+  background: #232944 !important;
+}
+[data-theme="dark"] .transactions-table tbody tr:hover {
+  background: #29314b !important;
+}
+[data-theme="dark"] .transactions-table tbody tr .transaction-id {
+  color: #7fd7ff;
+}
+[data-theme="dark"] .transactions-table tbody tr:hover .transaction-id {
+  color: #52b0e4;
+}
+[data-theme="dark"] .transactions-table tbody tr .transaction-amount {
+  color: #82faac;
+}
+[data-theme="dark"] .transactions-table tbody tr:hover .transaction-amount {
+  color: #53e677;
+}
+/* --- HOVER FIX END --- */
 
 .transaction-id { font-family: 'Courier New', monospace; font-weight: 700; color: #4361ee; }
 .transaction-amount { font-weight: 700; color: #22c55e; font-size: 1.02rem; }
@@ -193,7 +264,7 @@
 .action-btn {
   border: none;
   outline: none;
-  padding: 6px 18px;
+  padding: 10px 18px;
   border-radius: 24px;
   font-size: 1rem;
   cursor: pointer;
@@ -203,103 +274,50 @@
   color: #444;
   transition: box-shadow 0.2s, background 0.2s;
 }
+
 .action-btn.view-btn { color: #5c6bc0; background: #e8eaf6; }
 .action-btn.edit-btn { color: #43a047; background: #e0f2f1; }
 .action-btn:hover { box-shadow: 0 2px 12px #0002; background: #f0f0ff; }
 
-.form-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1001;
+/* --- DARK THEME SOFT FIX FOR ACTION BUTTONS --- */
+[data-theme="dark"] .action-btn {
+  background: #22273a !important;
+  color: #e6ecfa !important;
+  border: 1px solid #2a2b44 !important;
 }
-.form-box {
-  background: #fff;
-  color: #111;
-  padding: 2rem 2.25rem;
-  border-radius: 12px;
-  min-width: 320px;
-  max-width: 95vw;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
-  text-align: left;
+[data-theme="dark"] .action-btn.view-btn {
+  background: #232944 !important;
+  color: #b2caff !important;
 }
-.form-box h2 { margin: 0 0 1.4rem 0; }
-.form-box input, .form-box select {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: .48rem;
-  font-size: 1.06rem;
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
-  background: #f8fafc;
-  color: #222;
-  transition: background .18s, color .18s;
+[data-theme="dark"] .action-btn.edit-btn {
+  background: #295f45 !important;
+  color: #b2ffd2 !important;
 }
-.form-box input:focus, .form-box select:focus {
-  outline: none;
-  border-color: #4361ee;
-  background: #fff;
-}
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
+[data-theme="dark"] .action-btn:hover {
+  background: #2a3148 !important;
 }
 
-.toast {
-  min-width: 220px;
-  max-width: 350px;
-  background: #f9fafb;
-  color: #222;
-  border-radius: 8px;
-  padding: 1rem 2rem 1rem 1.5rem;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.09);
-  font-weight: 700;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.toast--error { background: #fee2e2; color: #991b1b; border-left: 6px solid #dc2626; }
-.toast--success { background: #dcfce7; color: #166534; border-left: 6px solid #22c55e; }
-.toast__close {
-  background: transparent;
-  border: none;
-  color: inherit;
-  font-size: 1.4rem;
-  margin-left: auto;
-  cursor: pointer;
-  line-height: 1;
-}
-
-/* Responsive: stack action buttons vertically, adapt layout on medium/small screens */
-@media (max-width: 1050px) {
-  .action-btns {
-    flex-direction: column;
-    gap: 0.4rem;
-    align-items: stretch;
-  }
-  .action-btn {
-    width: 100%;
-    margin-bottom: 2px;
-    justify-content: center;
-    text-align: center;
-  }
-  .transactions-table th, .transactions-table td {
-    font-size: 0.97rem;
-    padding: 0.41rem 0.19rem;
-  }
-}
-
-/* Wider adaptation: stat boxes and layout stack on tablet/mobile */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .transactions-stats {
     flex-direction: column;
-    gap: 1.05rem;
+    gap: 2rem;
   }
+  .stat-box {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 1.2rem 1rem;
+    box-sizing: border-box;
+    font-size: 0.98rem;
+  }
+  .stat-box__info h3, .stat-box__info p {
+    font-size: 0.95rem;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 900px) {
   .transactions-header {
     flex-direction: column;
     gap: 1.1rem;
@@ -315,50 +333,34 @@
   }
 }
 
-/* Mobile layout */
+@media (max-width: 700px) {
+  .stat-box {
+    padding: 1rem 0.75rem;
+    font-size: 0.95rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .stat-box__info h3, .stat-box__info p {
+    font-size: 0.87rem;
+    word-break: break-word;
+  }
+}
+
 @media (max-width: 600px) {
   .transactions-page { padding: 0.67rem 0.11rem; }
   .transactions-stats { flex-direction: column; gap: 0.68rem; }
-  .stat-box { width: 100%; min-width: 0; font-size: 1.00rem; }
+  .stat-box { width: 100%; min-width: 0; font-size: 0.90rem; }
+  .stat-box__info h3, .stat-box__info p {
+    font-size: 0.80rem;
+    word-break: break-word;
+  }
   .transactions-table th, .transactions-table td { font-size: 0.94rem; padding: 0.38rem 0.14rem; }
   .search-input { width: 100%; margin-right: 0; }
   .action-btns { flex-direction: column; gap: 0.3rem; }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Dark Theme */
-[data-theme="dark"] .stat-box,
-[data-theme="dark"] .transactions-table-container,
-[data-theme="dark"] .form-box,
-[data-theme="dark"] .toast {
-  background: #181B2E;
-  color: #f3f5fa;
-}
-[data-theme="dark"] .transactions-table th {
-  background: #232944;
-  color: #c2c8e0;
-}
-[data-theme="dark"] .form-box input,
-[data-theme="dark"] .form-box select {
-  background: #232944;
-  color: #fff;
-  border: 2px solid #272634;
-}
-[data-theme="dark"] .form-box input:focus, 
-[data-theme="dark"] .form-box select:focus {
-  background: #181B2E;
-}
-[data-theme="dark"] .toast--success {
-  background: #1a4124;
-  color: #b8f5cb;
-  border-left: 6px solid #22c55e;
-}
-[data-theme="dark"] .toast--error {
-  background: #401c1c;
-  color: #fee2e2;
-  border-left: 6px solid #dc2626;
+[data-theme="dark"] .stat-box__info,
+[data-theme="dark"] .stat-box__info h3,
+[data-theme="dark"] .stat-box__info p {
+  color: #f3f5fa !important;
 }

@@ -1,6 +1,6 @@
 // API Configuration
 // Change this to your backend URL when ready
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
 // API Endpoints
 export const ENDPOINTS = {
@@ -35,4 +35,4 @@ export const ENDPOINTS = {
 export const REQUEST_TIMEOUT = 10000
 
 // Use mock data (set to false when backend is ready)
-export const USE_MOCK_DATA = true
+export const USE_MOCK_DATA = false
