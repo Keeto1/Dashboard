@@ -73,11 +73,19 @@ async function fetchWithTimeout(url, options = {}) {
  */
 export async function apiGet(endpoint, options = {}) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`
-  const response = await fetchWithTimeout(url, {
-    method: HTTP_METHODS.GET,
-    ...options,
-  })
-  return response.json()
+  console.log('[API] GET request:', url)
+  try {
+    const response = await fetchWithTimeout(url, {
+      method: HTTP_METHODS.GET,
+      ...options,
+    })
+    const data = await response.json()
+    console.log('[API] GET response:', data)
+    return data
+  } catch (error) {
+    console.error('[API] GET error:', error.message)
+    throw error
+  }
 }
 
 /**

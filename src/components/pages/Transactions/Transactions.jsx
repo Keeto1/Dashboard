@@ -112,52 +112,66 @@ const TransactionModal = ({ transaction, onClose }) => (
 )
 
 // Edit Transaction Modal
-const EditTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => (
-  <AnimatePresence>
-    <motion.div
-      initial={{ scale: 0.93, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.93, opacity: 0 }}
-      transition={{ type: 'spring', stiffness: 330, damping: 31 }}
-      className="form-modal"
-    >
-      <div className="form-box">
+const EditTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => {
+  if (!txForm) return null; // safety
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal">
         <h2>Edit Transaction</h2>
+
+        {/* CUSTOMER */}
         <input
           type="text"
           placeholder="Customer"
-          value={txForm.customer}
-          onChange={e => setTxForm({ ...txForm, customer: e.target.value })}
+          value={txForm.customer ?? ""}
+          onChange={(e) =>
+            setTxForm({ ...txForm, customer: e.target.value })
+          }
         />
+
+        {/* AMOUNT */}
         <input
           type="number"
           placeholder="Amount"
-          value={txForm.amount}
-          onChange={e => setTxForm({ ...txForm, amount: e.target.value })}
+          value={txForm.amount ?? ""}
+          onChange={(e) =>
+            setTxForm({ ...txForm, amount: Number(e.target.value) })
+          }
         />
+
+        {/* TYPE */}
         <select
-          value={txForm.type}
-          onChange={e => setTxForm({ ...txForm, type: e.target.value })}
+          value={txForm.type ?? "payment"}
+          onChange={(e) =>
+            setTxForm({ ...txForm, type: e.target.value })
+          }
         >
           <option value="payment">Payment</option>
           <option value="refund">Refund</option>
         </select>
+
+        {/* STATUS */}
         <select
-          value={txForm.status}
-          onChange={e => setTxForm({ ...txForm, status: e.target.value })}
+          value={txForm.status ?? "pending"}
+          onChange={(e) =>
+            setTxForm({ ...txForm, status: e.target.value })
+          }
         >
           <option value="pending">Pending</option>
           <option value="completed">Completed</option>
-          <option value="failed">Failed</option>
+          <option value="cancelled">Cancelled</option>
         </select>
-        <div className="form-actions">
-          <button className="btn btn--primary" onClick={onSave}>Save</button>
-          <button className="btn" onClick={onCancel}>Cancel</button>
+
+        <div className="modal-actions">
+          <button onClick={onCancel}>Cancel</button>
+          <button onClick={() => onSave(txForm)}>Save</button>
         </div>
       </div>
-    </motion.div>
-  </AnimatePresence>
-)
+    </div>
+  );
+};
+
 
 const AddTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => (
   <AnimatePresence>
@@ -255,16 +269,17 @@ const Transactions = () => {
       </div>
     )
   }
+  
 
   //--- Search filter
-  const filteredTransactions = searchQuery.trim()
-    ? transactions.filter(
-        tx =>
-          tx.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tx.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tx.status.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : transactions
+ const filteredTransactions = searchQuery.trim()
+  ? transactions.filter(
+      (tx) =>
+        tx.customer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tx.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tx.status?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  : transactions;
 
   // Revenue/pending summary
   const totalRevenue = filteredTransactions
@@ -422,14 +437,14 @@ const Transactions = () => {
       </div>
 
       {/* Toast */}
-      {toast?.message && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-          key={toast.message}
-        />
-      )}
+     {toast?.message && (
+  <Toast
+    message={toast.message}
+    type={toast.type}
+    onClose={() => setToast(null)}
+  />
+)}
+
 
       {/* Transaction details modal */}
       <AnimatePresence>

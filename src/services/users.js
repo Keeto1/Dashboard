@@ -1,5 +1,6 @@
 import { apiGet, apiPost, apiPut, apiDelete } from '../utils/api'
 import { ENDPOINTS } from '../config/api'
+import { normalizeUsers } from '../utils/responseNormalizer'
 
 /**
  * Get all users
@@ -7,7 +8,8 @@ import { ENDPOINTS } from '../config/api'
  * Response: Array of user objects
  */
 export async function getUsers() {
-  return apiGet(ENDPOINTS.USERS)
+  const response = await apiGet(ENDPOINTS.USERS)
+  return normalizeUsers(response)
 }
 
 /**

@@ -1,6 +1,6 @@
 import { apiGet } from '../utils/api'
-import { ENDPOINTS, USE_MOCK_DATA } from '../config/api'
-import { getJSON } from '../utils/api'
+import { ENDPOINTS } from '../config/api'
+import { normalizeMetrics, normalizeTraffic, normalizeActivities, normalizeTeam } from '../utils/responseNormalizer'
 
 /**
  * Get dashboard metrics
@@ -8,11 +8,30 @@ import { getJSON } from '../utils/api'
  * { id, title, value, change, trend: 'up'|'down', color: 'primary'|'success'|'warning'|'info' }
  */
 export async function getMetrics() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.metrics || []
+  try {
+    const response = await apiGet(ENDPOINTS.METRICS)
+    return normalizeMetrics(response)
+  } catch (err) {
+    // If metrics endpoint isn't available on the backend, try to derive
+    // high-level metrics from the analytics endpoint as a fallback.
+    try {
+      const analytics = await apiGet(ENDPOINTS.ANALYTICS)
+      const summary = analytics.summary || {}
+      const metrics = []
+      if (typeof summary.totalRevenue !== 'undefined') {
+        metrics.push({ id: 'revenue', title: 'Total Revenue', value: `$${summary.totalRevenue}`, change: summary.revenueChange || 0, trend: summary.revenueChange >= 0 ? 'up' : 'down', color: 'primary' })
+      }
+      if (typeof summary.transactionCount !== 'undefined') {
+        metrics.push({ id: 'transactions', title: 'Transactions', value: `${summary.transactionCount}`, change: 0, trend: 'up', color: 'success' })
+      }
+      if (typeof summary.averageTransactionValue !== 'undefined') {
+        metrics.push({ id: 'avg_tx', title: 'Avg. Transaction', value: `$${summary.averageTransactionValue}`, change: 0, trend: 'up', color: 'info' })
+      }
+      return normalizeMetrics(metrics)
+    } catch (fallbackErr) {
+      throw err
+    }
   }
-  return apiGet(ENDPOINTS.METRICS)
 }
 
 /**
@@ -21,11 +40,21 @@ export async function getMetrics() {
  * { name: string, value: number }
  */
 export async function getTraffic() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.traffic || []
+  try {
+    const response = await apiGet(ENDPOINTS.TRAFFIC)
+    return normalizeTraffic(response)
+  } catch (err) {
+    // try alternate path
+    if (err.status === 404) {
+      try {
+        const response = await apiGet('/dashboard/traffic')
+        return normalizeTraffic(response)
+      } catch (e) {
+        throw err
+      }
+    }
+    throw err
   }
-  return apiGet(ENDPOINTS.TRAFFIC)
 }
 
 /**
@@ -34,11 +63,20 @@ export async function getTraffic() {
  * { time: string, action: string, user: string }
  */
 export async function getActivities() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.activities || []
+  try {
+    const response = await apiGet(ENDPOINTS.ACTIVITIES)
+    return normalizeActivities(response)
+  } catch (err) {
+    if (err.status === 404) {
+      try {
+        const response = await apiGet('/activities')
+        return normalizeActivities(response)
+      } catch (e) {
+        throw err
+      }
+    }
+    throw err
   }
-  return apiGet(ENDPOINTS.ACTIVITIES)
 }
 
 /**
@@ -46,10 +84,6 @@ export async function getActivities() {
  * Backend should return number between 0-100
  */
 export async function getDonutValue() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.donutValue || 0
-  }
   const data = await apiGet(ENDPOINTS.METRICS)
   return data.completionPercentage || 0
 }
@@ -63,14 +97,18 @@ export async function getDonutValue() {
  * }
  */
 export async function getAnalyticsData() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return {
-      revenue: json.revenueData || [],
-      categories: json.categoryData || [],
+  try {
+    return await apiGet(ENDPOINTS.ANALYTICS)
+  } catch (err) {
+    if (err.status === 404) {
+      try {
+        return await apiGet('/dashboard/analytics')
+      } catch (e) {
+        throw err
+      }
     }
+    throw err
   }
-  return apiGet(ENDPOINTS.ANALYTICS)
 }
 
 /**
@@ -87,11 +125,19 @@ export async function getAnalyticsData() {
  * }
  */
 export async function getPerformanceData() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.performance || []
+  try {
+    return await apiGet(ENDPOINTS.PERFORMANCE)
+  } catch (err) {
+    if (err.status === 404) {
+      // try alternate path
+      try {
+        return await apiGet('/performance')
+      } catch (e) {
+        throw err
+      }
+    }
+    throw err
   }
-  return apiGet(ENDPOINTS.PERFORMANCE)
 }
 
 /**
@@ -100,9 +146,18 @@ export async function getPerformanceData() {
  * { name: string, role: string, initials: string, color: string, online: boolean }
  */
 export async function getTeamMembers() {
-  if (USE_MOCK_DATA) {
-    const json = await getJSON('/mock/data.json')
-    return json.team || []
+  try {
+    const response = await apiGet(ENDPOINTS.TEAM)
+    return normalizeTeam(response)
+  } catch (err) {
+    if (err.status === 404) {
+      try {
+        const response = await apiGet('/team')
+        return normalizeTeam(response)
+      } catch (e) {
+        throw err
+      }
+    }
+    throw err
   }
-  return apiGet(ENDPOINTS.TEAM)
 }

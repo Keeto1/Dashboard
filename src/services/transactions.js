@@ -1,5 +1,6 @@
 import { apiGet, apiPost } from '../utils/api'
 import { ENDPOINTS } from '../config/api'
+import { normalizeTransactions } from '../utils/responseNormalizer'
 
 /**
  * Get all transactions
@@ -9,7 +10,16 @@ import { ENDPOINTS } from '../config/api'
 export async function getTransactions(params = {}) {
   const query = new URLSearchParams(params).toString()
   const endpoint = query ? `${ENDPOINTS.TRANSACTIONS}?${query}` : ENDPOINTS.TRANSACTIONS
-  return apiGet(endpoint)
+  const response = await apiGet(endpoint)
+  return normalizeTransactions(response)
+}
+
+/**
+ * Create a transaction
+ * Backend endpoint: POST /api/transactions
+ */
+export async function createTransaction(transactionData) {
+  return apiPost(ENDPOINTS.TRANSACTIONS, transactionData)
 }
 
 /**

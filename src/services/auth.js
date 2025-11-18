@@ -1,46 +1,91 @@
-// Mock auth service (no firebase dependency)
-import { users as mockUsers } from '../mock/data'
+import { apiPost, apiGet } from '../utils/api'
+import { ENDPOINTS } from '../config/api'
 
-const delay = (ms = 100) => new Promise(res => setTimeout(res, ms))
-
+/**
+ * Login user
+ * Backend endpoint: POST /api/auth/login
+ * Body: { email, password }
+ */
 export async function loginUser(email, password) {
-  await delay()
-  const user = mockUsers.find(u => u.email === email)
-  if (!user) throw new Error('Invalid credentials')
-  return { uid: user.id, email: user.email, ...user }
+  const response = await apiPost(ENDPOINTS.LOGIN, { email, password })
+  if (response.token) {
+    localStorage.setItem('authToken', response.token)
+    localStorage.setItem('user', JSON.stringify(response.user))
+  }
+  return response
 }
 
+/**
+ * Register user
+ * Backend endpoint: POST /api/auth/register
+ * Body: { email, password, name }
+ */
 export async function registerUser(email, password, userData) {
-  await delay()
-  const id = String(Date.now())
-  const newUser = { id, email, ...userData, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
-  mockUsers.unshift(newUser)
-  return { uid: id, email, ...newUser }
+  const response = await apiPost(ENDPOINTS.LOGIN, { email, password, ...userData })
+  if (response.token) {
+    localStorage.setItem('authToken', response.token)
+    localStorage.setItem('user', JSON.stringify(response.user))
+  }
+  return response
 }
 
+/**
+ * Logout user
+ * Backend endpoint: POST /api/auth/logout
+ */
 export async function logoutUser() {
-  await delay()
+  localStorage.removeItem('authToken')
+  localStorage.removeItem('user')
+  try {
+    await apiPost(ENDPOINTS.LOGOUT, {})
+  } catch (err) {
+    console.error('Logout error:', err)
+  }
   return { success: true }
 }
 
+/**
+ * Reset password
+ * Backend endpoint: POST /api/auth/reset-password
+ * Body: { email }
+ */
 export async function resetPassword(email) {
-  await delay()
-  // no-op in mock
-  return { success: true }
+  return apiPost(ENDPOINTS.LOGIN, { email })
 }
 
+/**
+ * Get current user from localStorage
+ */
 export function getCurrentUser() {
-  return null
+  const user = localStorage.getItem('user')
+  return user ? JSON.parse(user) : null
 }
 
+/**
+ * Get auth token
+ */
+export function getAuthToken() {
+  return localStorage.getItem('authToken')
+}
+
+/**
+ * Auth state change listener
+ */
 export function onAuthChange(callback) {
-  // no-op in mock
+  const user = getCurrentUser()
+  callback(user)
   return () => {}
 }
 
+/**
+ * Get user profile data
+ * Backend endpoint: GET /api/auth/profile
+ */
 export async function getUserData(uid) {
-  await delay()
-  const user = mockUsers.find(u => u.id === uid)
-  return user || null
+  try {
+    return await apiGet(ENDPOINTS.PROFILE)
+  } catch (err) {
+    console.error('Failed to get user data:', err)
+    return getCurrentUser()
+  }
 }
-// (mock implementations above)

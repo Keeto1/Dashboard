@@ -6,9 +6,10 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:40
 export const ENDPOINTS = {
   // Dashboard
   METRICS: '/dashboard/metrics',
-  TRAFFIC: '/dashboard/traffic',
+  TRAFFIC: '/traffic',
   ACTIVITIES: '/dashboard/activities',
-  ANALYTICS: '/dashboard/analytics',
+  // Note: backend exposes `/api/analytics` (no `/dashboard` prefix) on some setups
+  ANALYTICS: '/analytics',
   PERFORMANCE: '/dashboard/performance',
   TEAM: '/team/members',
   
@@ -33,6 +34,3 @@ export const ENDPOINTS = {
 
 // Request timeout in milliseconds
 export const REQUEST_TIMEOUT = 10000
-
-// Use mock data (set to false when backend is ready)
-export const USE_MOCK_DATA = false

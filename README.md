@@ -15,15 +15,17 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-## Mock data and local API
+## Backend API
 
-This project ships a small mock HTTP endpoint at `public/mock/data.json` used by the dashboard during development. The `Metrics` component fetches `/mock/data.json` and renders charts and stats from that payload.
+This dashboard is intended to be used with a backend API. Configure your backend base URL in the `.env` file using `VITE_API_URL`, for example:
 
-To switch to a real API:
-- Replace the fetch URL in `src/components/sections/Hero/Metrics/Metrics.jsx` with your API endpoint.
-- Implement authentication and proper error handling as needed.
+```
+VITE_API_URL=http://localhost:4000/api
+```
 
-The mock file format is a JSON object with keys: `metrics`, `traffic`, and `donutValue`.
+The frontend expects the backend to expose the endpoints documented in `src/config/api.js` (examples listed below). Ensure CORS allows the frontend origin (dev server typically at `http://localhost:3001`).
+
+If you don't have a backend yet, implement the required endpoints and response shapes described in the code comments inside `src/services/`.
 
 ### Local development
 

@@ -9,6 +9,7 @@
   margin-bottom: var(--spacing-2xl);
   flex-wrap: wrap;
   gap: var(--spacing-lg);
+  padding:5px;
 }
 
 .page-title {
@@ -26,6 +27,7 @@
   font-size: var(--font-size-base);
   color: var(--gray-600);
   margin: 0;
+
 }
 
 .users-controls {
@@ -39,6 +41,8 @@
 
 .search-box {
   margin-bottom: var(--spacing-md);
+  margin-left:8px;
+  width:300px;
 }
 
 .search-input-large {
@@ -50,6 +54,7 @@
   transition: all 0.2s ease;
   background: var(--gray-50);
   color: var(--text-primary);
+  
 }
 
 .search-input-large:focus {
