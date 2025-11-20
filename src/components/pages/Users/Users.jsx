@@ -30,10 +30,15 @@ const Users = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [formMode, setFormMode] = useState('add')
-  const [formUser, setFormUser] = useState({ name: '', email: '', role: '', status: 'active', id: null })
+  const [formUser, setFormUser] = useState({
+    name: '',
+    email: '',
+    role: '',
+    status: 'active',
+    _id: null
+  })
   const [toast, setToast] = useState(null)
 
-  // Confirmation modal state
   const [showConfirm, setShowConfirm] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
 
@@ -43,12 +48,31 @@ const Users = () => {
     setTimeout(() => setToast(null), 2500)
   }
 
+  // Generate avatar + initials
+  const enhanceUser = (user) => {
+    const initials = user.name
+      .split(' ')
+      .map(w => w[0])
+      .join('')
+      .toUpperCase()
+
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`
+
+    return {
+      ...user,
+      initials,
+      avatar: randomColor
+    }
+  }
+
   useEffect(() => {
     const loadUsers = async () => {
       try {
         const res = await fetch('http://localhost:4000/api/users')
         const data = await res.json()
-        setUsers(data)
+
+        // Add avatar + initials to every user in frontend only
+        setUsers(data.map(u => enhanceUser(u)))
       } catch (err) {
         showToast('Failed to fetch users.', 'error')
         console.error('Failed to fetch users:', err)
@@ -56,6 +80,7 @@ const Users = () => {
         setLoading(false)
       }
     }
+
     loadUsers()
   }, [])
 
@@ -64,45 +89,56 @@ const Users = () => {
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role.toLowerCase().includes(searchTerm.toLowerCase())
+
     const matchesFilter = activeFilter === 'all' || user.status === activeFilter
+
     return matchesSearch && matchesFilter
   })
 
   // Add User
   const handleAddUser = () => {
     setFormMode('add')
-    setFormUser({ name: '', email: '', role: '', status: 'active', id: null })
+    setFormUser({
+      name: '',
+      email: '',
+      role: '',
+      status: 'active',
+      _id: null
+    })
     setShowForm(true)
   }
 
   // Edit User
   const handleEditUser = (user) => {
     setFormMode('edit')
-    setFormUser({ ...user })
+    setFormUser(user)
     setShowForm(true)
   }
 
-  // Open confirmation modal instead of window.confirm
+  // Delete (open modal)
   const handleDeleteUser = (user) => {
     setUserToDelete(user)
     setShowConfirm(true)
   }
 
-  // Confirm Delete (real API call)
+  // Confirm Delete → REAL API call
   const confirmDeleteUser = async () => {
     setLoading(true)
     try {
       await fetch('http://localhost:4000/api/users', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: userToDelete.id }),
+        body: JSON.stringify({ id: userToDelete._id })
       })
-      setUsers(prev => prev.filter(u => u.id !== userToDelete.id))
-      showToast(`User ${userToDelete.name} deleted.`, 'success')
+
+      setUsers(prev => prev.filter(u => u._id !== userToDelete._id))
+
+      showToast(`User deleted successfully.`, 'success')
     } catch (e) {
       showToast('Failed to delete user.', 'error')
-      console.error('Failed to delete user:', e)
+      console.error('Delete error:', e)
     }
+
     setLoading(false)
     setShowConfirm(false)
     setUserToDelete(null)
@@ -115,14 +151,9 @@ const Users = () => {
 
   // Save/Add/Edit user
   const saveUser = async () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formUser.email || !emailRegex.test(formUser.email)) {
-      showToast('Please enter a valid email address.', 'error')
-      return;
-    }
-    if (!formUser.name || !formUser.role) {
-      showToast('Please fill all required fields.', 'error')
-      return;
+    if (!formUser.email || !formUser.name || !formUser.role) {
+      showToast('All fields are required.', 'error')
+      return
     }
 
     setLoading(true)
@@ -131,28 +162,35 @@ const Users = () => {
         const res = await fetch('http://localhost:4000/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formUser),
+          body: JSON.stringify(formUser)
         })
+
         const newUser = await res.json()
-        setUsers(prev => [...prev, newUser])
+        setUsers(prev => [...prev, enhanceUser(newUser)])
+
         showToast('User added successfully!', 'success')
-      } else { // edit
+      } else {
         const res = await fetch('http://localhost:4000/api/users', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formUser),
+          body: JSON.stringify(formUser)
         })
+
         const updated = await res.json()
+
         setUsers(prev =>
-          prev.map(user => user.id === updated.id ? { ...user, ...updated } : user)
+          prev.map(u => (u._id === updated._id ? enhanceUser(updated) : u))
         )
+
         showToast('User updated successfully!', 'success')
       }
+
       setShowForm(false)
     } catch (e) {
       showToast('Failed to save user.', 'error')
-      console.error('Failed to save user:', e)
+      console.error('Save error:', e)
     }
+
     setLoading(false)
   }
 
@@ -170,13 +208,11 @@ const Users = () => {
 
   return (
     <div className="users-page">
-      {/* Toast notification */}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      {/* Confirm delete modal */}
-      {showConfirm && userToDelete && (
+      {showConfirm && (
         <ConfirmBox
-          message={`Are you sure you want to delete ${userToDelete.name}?`}
+          message={`Are you sure you want to delete ${userToDelete?.name}?`}
           onConfirm={confirmDeleteUser}
           onCancel={cancelDeleteUser}
         />
@@ -185,50 +221,44 @@ const Users = () => {
       <div className="users-header">
         <div>
           <h1 className="page-title">Users Management</h1>
-          <p className="page-subtitle">Manage your team members and their permissions</p>
+          <p className="page-subtitle">Manage your team</p>
         </div>
+
         <button className="btn btn--primary" onClick={handleAddUser}>
-          <span>➕</span> Add User
+          ➕ Add User
         </button>
       </div>
 
       <div className="users-controls">
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input-large"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input-large"
+        />
+
         <div className="filter-buttons">
-          <button
-            className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('all')}
-          >
+          <button className={activeFilter === 'all' ? 'active filter-btn' : 'filter-btn'} onClick={() => setActiveFilter('all')}>
             All ({users.length})
           </button>
-          <button
-            className={`filter-btn ${activeFilter === 'active' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('active')}
-          >
+
+          <button className={activeFilter === 'active' ? 'active filter-btn' : 'filter-btn'} onClick={() => setActiveFilter('active')}>
             Active ({users.filter(u => u.status === 'active').length})
           </button>
-          <button
-            className={`filter-btn ${activeFilter === 'inactive' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('inactive')}
-          >
+
+          <button className={activeFilter === 'inactive' ? 'active filter-btn' : 'filter-btn'} onClick={() => setActiveFilter('inactive')}>
             Inactive ({users.filter(u => u.status === 'inactive').length})
           </button>
         </div>
       </div>
 
-      {/* Modal form for Add/Edit */}
+      {/* Form modal */}
       {showForm && (
         <div className="form-modal">
           <div className="form-box">
             <h2>{formMode === 'add' ? 'Add User' : 'Edit User'}</h2>
+
             <input
               type="text"
               placeholder="Name"
@@ -236,6 +266,7 @@ const Users = () => {
               onChange={e => setFormUser({ ...formUser, name: e.target.value })}
               required
             />
+
             <input
               type="email"
               placeholder="Email"
@@ -243,6 +274,7 @@ const Users = () => {
               onChange={e => setFormUser({ ...formUser, email: e.target.value })}
               required
             />
+
             <input
               type="text"
               placeholder="Role"
@@ -250,6 +282,7 @@ const Users = () => {
               onChange={e => setFormUser({ ...formUser, role: e.target.value })}
               required
             />
+
             <select
               value={formUser.status}
               onChange={e => setFormUser({ ...formUser, status: e.target.value })}
@@ -257,6 +290,7 @@ const Users = () => {
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
+
             <div className="form-actions">
               <button className="btn btn--primary" onClick={saveUser}>Save</button>
               <button className="btn" onClick={closeForm}>Cancel</button>
@@ -267,24 +301,31 @@ const Users = () => {
 
       <div className="users-grid">
         {filteredUsers.map(user => (
-          <div key={user.id} className="user-card">
+          <div key={user._id} className="user-card">
             <div className="user-card__header">
-              <div className="user-card__avatar" style={{ backgroundColor: user.avatar }}>
+              <div
+                className="user-card__avatar"
+                style={{ backgroundColor: user.avatar }}
+              >
                 {user.initials}
               </div>
+
               <span className={`status-badge status-badge--${user.status}`}>
                 {user.status}
               </span>
             </div>
+
             <div className="user-card__body">
               <h3 className="user-card__name">{user.name}</h3>
               <p className="user-card__email">{user.email}</p>
               <p className="user-card__role">{user.role}</p>
             </div>
+
             <div className="user-card__footer">
               <button className="user-card__btn" onClick={() => handleEditUser(user)}>
                 ✏️ Edit
               </button>
+
               <button className="user-card__btn user-card__btn--danger" onClick={() => handleDeleteUser(user)}>
                 🗑️ Delete
               </button>
@@ -292,6 +333,7 @@ const Users = () => {
           </div>
         ))}
       </div>
+
     </div>
   )
 }

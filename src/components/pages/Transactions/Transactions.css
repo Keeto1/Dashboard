@@ -180,7 +180,7 @@
 
 .transactions-table th,
 .transactions-table td {
-  padding: 0.90rem 1.5rem;
+  padding: 0.90rem 1.7rem;
   font-size: 1rem;
   text-align: center;
   border-bottom: 1px solid #f3f4f6;
@@ -320,7 +320,10 @@
 @media (max-width: 900px) {
   .transactions-header {
     flex-direction: column;
-    gap: 1.1rem;
+    width:100%;
+    justify-content:space-between;
+    align-items: center;
+    gap: 1rem;
   }
   .transactions-table th,
   .transactions-table td {
@@ -334,6 +337,19 @@
 }
 
 @media (max-width: 700px) {
+  .transactions-header{
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+
+  }
+  .transactions-header button,
+  .transactions-header .export-btn,
+  .transactions-header .import-btn{
+    width: 100%;
+    max-width:100%;
+    
+  }
   .stat-box {
     padding: 1rem 0.75rem;
     font-size: 0.95rem;
