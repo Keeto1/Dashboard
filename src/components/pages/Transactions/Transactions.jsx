@@ -113,62 +113,80 @@ const TransactionModal = ({ transaction, onClose }) => (
 
 // Edit Transaction Modal
 const EditTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => {
-  if (!txForm) return null; // safety
+  if (!txForm) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h2>Edit Transaction</h2>
+    <AnimatePresence>
+      <motion.div
+        initial={{ scale: 0.93, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.93, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 330, damping: 31 }}
+        className="form-modal"
+        style={{ zIndex: 5000 }}
+      >
+        <div className="form-box">
+          <h2>Edit Transaction</h2>
 
-        {/* CUSTOMER */}
-        <input
-          type="text"
-          placeholder="Customer"
-          value={txForm.customer ?? ""}
-          onChange={(e) =>
-            setTxForm({ ...txForm, customer: e.target.value })
-          }
-        />
+          <div className="form-group">
+            <label>Customer</label>
+            <input
+              type="text"
+              placeholder="Customer Name"
+              value={txForm.customer ?? ""}
+              onChange={(e) =>
+                setTxForm({ ...txForm, customer: e.target.value })
+              }
+            />
+          </div>
 
-        {/* AMOUNT */}
-        <input
-          type="number"
-          placeholder="Amount"
-          value={txForm.amount ?? ""}
-          onChange={(e) =>
-            setTxForm({ ...txForm, amount: Number(e.target.value) })
-          }
-        />
+          <div className="form-group">
+            <label>Amount</label>
+            <input
+              type="number"
+              placeholder="Amount"
+              value={txForm.amount ?? ""}
+              onChange={(e) =>
+                setTxForm({ ...txForm, amount: Number(e.target.value) })
+              }
+            />
+          </div>
 
-        {/* TYPE */}
-        <select
-          value={txForm.type ?? "payment"}
-          onChange={(e) =>
-            setTxForm({ ...txForm, type: e.target.value })
-          }
-        >
-          <option value="payment">Payment</option>
-          <option value="refund">Refund</option>
-        </select>
+          <div className="form-group">
+            <label>Type</label>
+            <select
+              value={txForm.type ?? "payment"}
+              onChange={(e) =>
+                setTxForm({ ...txForm, type: e.target.value })
+              }
+            >
+              <option value="payment">Payment</option>
+              <option value="refund">Refund</option>
+            </select>
+          </div>
 
-        {/* STATUS */}
-        <select
-          value={txForm.status ?? "pending"}
-          onChange={(e) =>
-            setTxForm({ ...txForm, status: e.target.value })
-          }
-        >
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+          <div className="form-group">
+            <label>Status</label>
+            <select
+              value={txForm.status ?? "pending"}
+              onChange={(e) =>
+                setTxForm({ ...txForm, status: e.target.value })
+              }
+            >
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
 
-        <div className="modal-actions">
-          <button onClick={onCancel}>Cancel</button>
-          <button onClick={() => onSave(txForm)}>Save</button>
+          <div className="form-actions">
+            <button className="btn btn--primary" onClick={() => onSave(txForm)}>Save Changes</button>
+            <button className="btn" onClick={onCancel}>Cancel</button>
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -184,33 +202,45 @@ const AddTransactionModal = ({ txForm, setTxForm, onSave, onCancel }) => (
     >
       <div className="form-box">
         <h2>Add Transaction</h2>
-        <input
-          type="text"
-          placeholder="Customer"
-          value={txForm.customer}
-          onChange={e => setTxForm({ ...txForm, customer: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Amount"
-          value={txForm.amount}
-          onChange={e => setTxForm({ ...txForm, amount: e.target.value })}
-        />
-        <select
-          value={txForm.type}
-          onChange={e => setTxForm({ ...txForm, type: e.target.value })}
-        >
-          <option value="payment">Payment</option>
-          <option value="refund">Refund</option>
-        </select>
-        <select
-          value={txForm.status}
-          onChange={e => setTxForm({ ...txForm, status: e.target.value })}
-        >
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-          <option value="failed">Failed</option>
-        </select>
+        <div className="form-group">
+          <label>Customer</label>
+          <input
+            type="text"
+            placeholder="Customer Name"
+            value={txForm.customer}
+            onChange={e => setTxForm({ ...txForm, customer: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Amount</label>
+          <input
+            type="number"
+            placeholder="Amount"
+            value={txForm.amount}
+            onChange={e => setTxForm({ ...txForm, amount: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Type</label>
+          <select
+            value={txForm.type}
+            onChange={e => setTxForm({ ...txForm, type: e.target.value })}
+          >
+            <option value="payment">Payment</option>
+            <option value="refund">Refund</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Status</label>
+          <select
+            value={txForm.status}
+            onChange={e => setTxForm({ ...txForm, status: e.target.value })}
+          >
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
         <div className="form-actions">
           <button className="btn btn--primary" onClick={onSave}>Save</button>
           <button className="btn" onClick={onCancel}>Cancel</button>
@@ -269,17 +299,17 @@ const Transactions = () => {
       </div>
     )
   }
-  
+
 
   //--- Search filter
- const filteredTransactions = searchQuery.trim()
-  ? transactions.filter(
+  const filteredTransactions = searchQuery.trim()
+    ? transactions.filter(
       (tx) =>
         tx.customer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tx.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tx.status?.toLowerCase().includes(searchQuery.toLowerCase())
     )
-  : transactions;
+    : transactions;
 
   // Revenue/pending summary
   const totalRevenue = filteredTransactions
@@ -420,30 +450,35 @@ const Transactions = () => {
   return (
     <div className="transactions-page">
       {/* Search Input */}
-      <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
-        <input
-          type="text"
-          placeholder="Search customer, ID, or status..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        <button className="btn btn--primary" onClick={handleExport}>
-          <span>📥</span> Export
-        </button>
-        <button className="btn btn--success" onClick={handleAddTransaction}>
-          <span>➕</span> Add Transaction
-        </button>
+      <div className="transactions-header">
+        <h1 className="page-title">Transactions</h1>
+        <div className="header-actions">
+          <input
+            type="text"
+            placeholder="Search customer, ID, or status..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          <div className="btn-group">
+            <button className="btn btn--primary" onClick={handleExport}>
+              <span>📥</span> Export
+            </button>
+            <button className="btn btn--success" onClick={handleAddTransaction}>
+              <span>➕</span> Add
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Toast */}
-     {toast?.message && (
-  <Toast
-    message={toast.message}
-    type={toast.type}
-    onClose={() => setToast(null)}
-  />
-)}
+      {toast?.message && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
 
       {/* Transaction details modal */}
@@ -502,8 +537,8 @@ const Transactions = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="transactions-table-container">
+      {/* Table View (Desktop/Tablet) */}
+      <div className="transactions-table-container desktop-view">
         <table className="transactions-table">
           <thead>
             <tr>
@@ -538,10 +573,10 @@ const Transactions = () => {
                 <td>
                   <div className="action-btns">
                     <button className="action-btn view-btn" onClick={() => handleViewTransaction(transaction)}>
-                      👁️ View
+                      👁️
                     </button>
                     <button className="action-btn edit-btn" onClick={() => handleEditTransaction(transaction)}>
-                      ✏️ Edit
+                      ✏️
                     </button>
                   </div>
                 </td>
@@ -549,6 +584,48 @@ const Transactions = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Card View (Mobile) */}
+      <div className="mobile-view">
+        {filteredTransactions.map(transaction => (
+          <div className="transaction-card" key={transaction.id}>
+            <div className="card-header">
+              <span className="transaction-id">{transaction.id}</span>
+              <span className={`status-badge status-badge--${transaction.status}`}>
+                {transaction.status}
+              </span>
+            </div>
+            <div className="card-body">
+              <div className="card-row">
+                <span className="label">Customer:</span>
+                <span className="value">{transaction.customer}</span>
+              </div>
+              <div className="card-row">
+                <span className="label">Date:</span>
+                <span className="value">{transaction.date}</span>
+              </div>
+              <div className="card-row">
+                <span className="label">Amount:</span>
+                <span className="transaction-amount">${transaction.amount.toFixed(2)}</span>
+              </div>
+              <div className="card-row">
+                <span className="label">Type:</span>
+                <span className={`type-badge type-badge--${transaction.type}`}>
+                  {transaction.type}
+                </span>
+              </div>
+            </div>
+            <div className="card-actions">
+              <button className="action-btn view-btn" onClick={() => handleViewTransaction(transaction)}>
+                👁️ View
+              </button>
+              <button className="action-btn edit-btn" onClick={() => handleEditTransaction(transaction)}>
+                ✏️ Edit
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

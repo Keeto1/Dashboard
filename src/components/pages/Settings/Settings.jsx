@@ -10,6 +10,12 @@ const Settings = ({ theme, onToggleTheme }) => {
     timezone: 'UTC',
   })
 
+  // Modal states
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
+  const [deleteInputValue, setDeleteInputValue] = useState('')
+
   const handleToggle = (key) => {
     setSettings(prev => ({ ...prev, [key]: !prev[key] }))
   }
@@ -19,20 +25,34 @@ const Settings = ({ theme, onToggleTheme }) => {
   }
 
   const handleSaveChanges = () => {
-    alert('Settings saved successfully!')
+    setShowSuccessModal(true)
     console.log('Saved settings:', settings)
     // TODO: Implement actual save to backend/localStorage
   }
 
   const handleDeleteAccount = () => {
-    const confirmed = confirm('⚠️ WARNING: This will permanently delete your account and all data. This action cannot be undone.\n\nAre you absolutely sure?')
-    if (confirmed) {
-      const doubleConfirm = confirm('Type DELETE to confirm account deletion')
-      if (doubleConfirm) {
-        alert('Account deletion initiated. You will be logged out.')
-        // TODO: Implement actual account deletion
-      }
+    setShowDeleteModal(true)
+  }
+
+  const handleFirstDeleteConfirm = () => {
+    setShowDeleteModal(false)
+    setShowConfirmDeleteModal(true)
+  }
+
+  const handleFinalDeleteConfirm = () => {
+    if (deleteInputValue.toUpperCase() === 'DELETE') {
+      setShowConfirmDeleteModal(false)
+      setDeleteInputValue('')
+      // TODO: Implement actual account deletion
+      alert('Account deletion initiated. You will be logged out.')
     }
+  }
+
+  const closeAllModals = () => {
+    setShowSuccessModal(false)
+    setShowDeleteModal(false)
+    setShowConfirmDeleteModal(false)
+    setDeleteInputValue('')
   }
 
   return (
@@ -172,6 +192,95 @@ const Settings = ({ theme, onToggleTheme }) => {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={closeAllModals}>
+          <div className="modal modal--success" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon modal-icon--success">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h2 className="modal-title">Settings Saved!</h2>
+            <p className="modal-message">Your preferences have been saved successfully.</p>
+            <div className="modal-actions">
+              <button className="btn btn--primary" onClick={closeAllModals}>
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Warning Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay" onClick={closeAllModals}>
+          <div className="modal modal--danger" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon modal-icon--danger">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                <path d="M12 8v4m0 4h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h2 className="modal-title">Delete Account?</h2>
+            <p className="modal-message">
+              ⚠️ <strong>WARNING:</strong> This will permanently delete your account and all data. 
+              This action cannot be undone.
+            </p>
+            <p className="modal-message modal-message--secondary">
+              Are you absolutely sure you want to continue?
+            </p>
+            <div className="modal-actions">
+              <button className="btn btn--secondary" onClick={closeAllModals}>
+                Cancel
+              </button>
+              <button className="btn btn--danger" onClick={handleFirstDeleteConfirm}>
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Final Confirmation Modal */}
+      {showConfirmDeleteModal && (
+        <div className="modal-overlay" onClick={closeAllModals}>
+          <div className="modal modal--danger" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon modal-icon--danger">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                <path d="M15 9l-6 6m0-6l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h2 className="modal-title">Final Confirmation</h2>
+            <p className="modal-message">
+              Type <strong>DELETE</strong> to confirm account deletion
+            </p>
+            <input
+              type="text"
+              className="modal-input"
+              placeholder="Type DELETE"
+              value={deleteInputValue}
+              onChange={(e) => setDeleteInputValue(e.target.value)}
+              autoFocus
+            />
+            <div className="modal-actions">
+              <button className="btn btn--secondary" onClick={closeAllModals}>
+                Cancel
+              </button>
+              <button 
+                className="btn btn--danger" 
+                onClick={handleFinalDeleteConfirm}
+                disabled={deleteInputValue.toUpperCase() !== 'DELETE'}
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
