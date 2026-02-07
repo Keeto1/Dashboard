@@ -111,7 +111,7 @@ const Login = () => {
                 </defs>
               </svg>
             </div>
-            <h1 className="auth-title">Welcome to PayFlow</h1>
+            <h1 className="auth-title">Welcome to WorkFlow</h1>
             <p className="auth-subtitle">Sign in to continue to your dashboard</p>
           </div>
 
@@ -252,7 +252,7 @@ const Login = () => {
         {/* Footer */}
         <div className="auth-bottom">
           <p className="auth-copyright">
-            © 2024 PayFlow. All rights reserved.
+            © 2026 WorkFlow. All rights reserved.
           </p>
           <div className="auth-links">
             <a href="#" className="link link--muted">Privacy Policy</a>

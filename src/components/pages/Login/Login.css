@@ -61,15 +61,9 @@
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(50px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-50px, 50px) scale(0.9);
-  }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-50px, 50px) scale(0.9); }
 }
 
 /* Content */
@@ -98,14 +92,8 @@
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Header */
@@ -121,14 +109,8 @@
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .auth-title {
@@ -165,14 +147,8 @@
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .alert--error {
@@ -214,6 +190,7 @@
   color: var(--gray-300);
 }
 
+/* Improved Input Alignment */
 .input-wrapper {
   position: relative;
   display: flex;
@@ -223,13 +200,20 @@
 .input-icon {
   position: absolute;
   left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 18px;
+  width: 18px;
   color: var(--gray-400);
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 3rem;
+  padding: 0.875rem 1rem 0.875rem 3rem !important;
   border: 2px solid var(--gray-300);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
@@ -237,6 +221,7 @@
   color: var(--gray-900);
   background: var(--white);
   transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
 [data-theme="dark"] .form-input {
@@ -259,9 +244,12 @@
   box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
 }
 
+/* Toggle Password Proper Alignment */
 .input-toggle {
   position: absolute;
   right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: var(--gray-400);
@@ -279,13 +267,23 @@
   background: rgba(67, 97, 238, 0.05);
 }
 
+/* Error Message Icon Alignment */
 .form-error {
   font-size: var(--font-size-xs);
   color: #dc2626;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  line-height: 1.2;
 }
+
+.form-error svg {
+  height: 14px;
+  width: 14px;
+  flex-shrink: 0;
+}
+
+
 
 /* Form Options */
 .form-options {
@@ -295,26 +293,32 @@
   margin-top: -0.5rem;
 }
 
+/* Checkbox Alignment */
 .checkbox-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+ 
+  
 }
 
 .checkbox-input {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 16px;
+  height: 16px;
   border-radius: var(--radius-sm);
   border: 2px solid var(--gray-300);
   cursor: pointer;
   accent-color: var(--primary);
+  
 }
 
 .checkbox-text {
   font-size: var(--font-size-sm);
   color: var(--gray-600);
   user-select: none;
+  line-height: 1.2;
+  
 }
 
 [data-theme="dark"] .checkbox-text {
@@ -367,6 +371,12 @@
   white-space: nowrap;
 }
 
+.btn svg {
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+}
+
 .btn--primary {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
@@ -387,9 +397,7 @@
   cursor: not-allowed;
 }
 
-.btn--full {
-  width: 100%;
-}
+.btn--full { width: 100%; }
 
 /* Spinner */
 .spinner {
@@ -397,12 +405,8 @@
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .spinner-circle {
@@ -443,6 +447,7 @@
 /* Footer */
 .auth-footer {
   text-align: center;
+  margin-top:1rem
 }
 
 .auth-footer-text {
@@ -511,40 +516,17 @@
 
 /* Responsive */
 @media (max-width: 640px) {
-  .auth-content {
-    padding: 1rem;
-  }
-
-  .auth-card {
-    padding: 2rem 1.5rem;
-  }
-
-  .auth-title {
-    font-size: var(--font-size-xl);
-  }
-
+  .auth-content { padding: 1rem; }
+  .auth-card { padding: 2rem 1.5rem; }
+  .auth-title { font-size: var(--font-size-xl); }
   .form-options {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
   }
 
-  .gradient-orb {
-    filter: blur(60px);
-  }
-
-  .orb-1 {
-    width: 250px;
-    height: 250px;
-  }
-
-  .orb-2 {
-    width: 200px;
-    height: 200px;
-  }
-
-  .orb-3 {
-    width: 180px;
-    height: 180px;
-  }
+  .gradient-orb { filter: blur(60px); }
+  .orb-1 { width: 250px; height: 250px; }
+  .orb-2 { width: 200px; height: 200px; }
+  .orb-3 { width: 180px; height: 180px; }
 }

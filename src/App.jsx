@@ -4,6 +4,9 @@ import { useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './components/pages/Login/Login'
 import Register from './components/pages/Register/Register'
+// NEW IMPORTS
+import ForgotPass from './components/pages/ForgotPass/ForgotPass'
+import ResetPass from './components/pages/ResetPass/ResetPass'
 import Header from './components/common/Header/Header'
 import Sidebar from './components/common/Sidebar/Sidebar'
 import Hero from './components/sections/Hero/Hero'
@@ -24,7 +27,6 @@ function DashboardLayout({ children }) {
   const { width } = useWindowSize()
   const isMobile = width < 768
 
-  // Start open on desktop, closed on mobile
   useEffect(() => {
     setSidebarOpen(!isMobile)
   }, [isMobile])
@@ -92,7 +94,6 @@ function App() {
   const { isAuthenticated, loading } = useAuth()
   const { theme, toggleTheme } = useTheme()
 
-  // Show loading spinner while checking authentication
   if (loading) {
     return (
       <div className="loading-container">
@@ -133,7 +134,7 @@ function App() {
 
   return (
     <Routes>
-      {/* Public Routes - Redirect to dashboard if already logged in */}
+      {/* ---------- PUBLIC ROUTES ---------- */}
       <Route 
         path="/login" 
         element={
@@ -142,6 +143,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
       <Route 
         path="/register" 
         element={
@@ -151,7 +153,26 @@ function App() {
         } 
       />
 
-      {/* Protected Routes - Require authentication */}
+      {/* ⭐ NEW PUBLIC ROUTES */}
+      <Route 
+        path="/forgot-password"
+        element={
+          <ProtectedRoute requireAuth={false}>
+            <ForgotPass />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route 
+        path="/reset-pass"
+        element={
+          <ProtectedRoute requireAuth={false}>
+            <ResetPass />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ---------- PROTECTED ROUTES ---------- */}
       <Route 
         path="/dashboard" 
         element={
@@ -162,6 +183,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
       <Route 
         path="/analytics" 
         element={
@@ -172,6 +194,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
       <Route 
         path="/users" 
         element={
@@ -182,6 +205,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
       <Route 
         path="/transactions" 
         element={
@@ -192,6 +216,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
       <Route 
         path="/settings" 
         element={
@@ -213,7 +238,7 @@ function App() {
         } 
       />
 
-      {/* 404 - Redirect to root */}
+      {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

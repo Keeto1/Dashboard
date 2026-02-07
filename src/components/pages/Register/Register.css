@@ -1,5 +1,5 @@
 /* Import Login.css styles - All base styles are shared */
-@import './Login.css';
+@import 'src/components/pages/Login/Login.css';
 
 /* Password Strength Indicator */
 .password-strength {
@@ -9,6 +9,43 @@
   margin-top: 0.5rem;
 }
 
+/* Proper checkbox text (fixed class name) */
+.checkbox-text {
+  margin-left: 0.5rem;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  color: var(--gray-600);
+}
+
+/* REMOVE your old incorrect class
+.checkbox-txt { ... } */
+
+/* Checkbox alignment fix */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* Checkbox input styling for consistency */
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-500);
+  cursor: pointer;
+}
+
+/* Error state */
+.checkbox-label--error {
+  color: #dc2626;
+}
+
+.checkbox-label--error .checkbox-text {
+  color: #dc2626;
+}
+
+/* Password strength bar */
 .password-strength-bar {
   width: 100%;
   height: 4px;
@@ -33,16 +70,7 @@
   transition: color 0.3s ease;
 }
 
-/* Checkbox Label Error State */
-.checkbox-label--error {
-  color: #dc2626;
-}
-
-.checkbox-label--error .checkbox-text {
-  color: #dc2626;
-}
-
-/* Loading Container for ProtectedRoute */
+/* Loading state */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -70,7 +98,7 @@
   color: var(--gray-400);
 }
 
-/* Responsive adjustments for Register form */
+/* Responsive adjustments */
 @media (max-width: 640px) {
   .auth-card {
     max-height: 90vh;

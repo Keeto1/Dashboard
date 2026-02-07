@@ -166,7 +166,7 @@ const Register = () => {
                 </defs>
               </svg>
             </div>
-            <h1 className="auth-title">Join PayFlow</h1>
+            <h1 className="auth-title">Join WorkFlow</h1>
             <p className="auth-subtitle">Create your account to get started</p>
           </div>
 
@@ -330,22 +330,27 @@ const Register = () => {
             </div>
 
             {/* Terms Agreement */}
-            <div className="form-group">
-              <label className={`checkbox-label ${errors.agreeToTerms ? 'checkbox-label--error' : ''}`}>
-                <input
-                  type="checkbox"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
-                  onChange={handleChange}
-                  className="checkbox-input"
-                />
-                <span className="checkbox-text">
-                  I agree to the <a href="#" className="link link--primary">Terms of Service</a> and{' '}
-                  <a href="#" className="link link--primary">Privacy Policy</a>
-                </span>
-              </label>
-              {errors.agreeToTerms && <span className="form-error">{errors.agreeToTerms}</span>}
-            </div>
+    <div className="form-group checkbox-group">
+  <label className={`checkbox-label ${errors.agreeToTerms ? 'checkbox-label--error' : ''}`}>
+    <input
+      type="checkbox"
+      name="agreeToTerms"
+      checked={formData.agreeToTerms}
+      onChange={handleChange}
+      className="checkbox-input"
+    />
+    <span className="checkbox-text">
+      I agree to the <a href="#" className="link link--primary">Terms of Service</a> and{' '}
+      <a href="#" className="link link--primary">Privacy Policy</a>
+    </span>
+  </label>
+
+  {errors.agreeToTerms && (
+    <span className="form-error">{errors.agreeToTerms}</span>
+  )}
+</div>
+
+
 
             {/* Submit Button */}
             <button
@@ -385,7 +390,7 @@ const Register = () => {
         {/* Footer */}
         <div className="auth-bottom">
           <p className="auth-copyright">
-            © 2024 PayFlow. All rights reserved.
+            © 2026 WorkFlow. All rights reserved.
           </p>
           <div className="auth-links">
             <a href="#" className="link link--muted">Privacy Policy</a>
